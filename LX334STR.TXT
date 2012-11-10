@@ -1,0 +1,105 @@
+-----------------------------------------------------------------------------------------------
+MEADE LX200 ALIGNMENT STARS V3.34L USER OBJECT FILE FOR EARTH CENTERED UNIVERSE (ECU) V3.0A
+-----------------------------------------------------------------------------------------------
+This file is distributed with the applicable user object file in a single zip archive, and
+contains the following information:
+
+OVERVIEW
+NUMBER OF OBJECTS, NUMBER OF FILES, AND FILE SIZE
+HANDLING NOTES
+SOURCE
+FILE FORMAT
+CONTACT
+DISCLAIMER
+TRADEMARKS AND COPYRIGHT NOTICE
+-----------------------------------------------------------------------------------------------
+OVERVIEW
+
+The file "lx334l.ecu" included with this archive contains positional and photometric data in a
+User Objects File format suitable for use with ECU V3.0A operating under Windows 3.1/95/98.
+Please refer to the ECU documentation for further information on setting up or modifying User
+Object Files.
+-----------------------------------------------------------------------------------------------
+NUMBER OF OBJECTS, NUMBER OF FILES, AND FILE SIZE
+
+There are 351 objects in this user object file.  All objects are contained in 1 file.  The user
+object file size is 45 kb.
+-----------------------------------------------------------------------------------------------
+HANDLING NOTES
+
+Place the lx334l.ecu file in the ECU directory (or directory of choice). These objects can be
+displayed in ECU by choosing from the ECU menu:
+
+Miscellaneous -> Directory/File Setup... -> The user object file
+
+and entering the path and file name for this object file, for example:
+
+c:\ecu\lx334l.ecu
+-----------------------------------------------------------------------------------------------
+SOURCE
+
+The source for this user object file is R.M Gatter (1999) as extracted from the LX200 database
+(firmware version 3.34L).  Cross-referenced data was compiled by R.M. Gatter using the
+following sources:
+
+General Catalog of Variable Stars (Kholopov+ 1995), SAO Star Catalog J2000 (SAO Staff 1966;
+USNO, ADC 1990)
+FK5 - SAO - HD - Common Name Cross Index (Smith 1996)
+Gen Cat Var Stars 2: Table 2 Bayer Correspondences (Nagy unpub)
+Gen Cat Var Stars 2: Table 4 Flamsteed Correspondences (Nagy unpub)
+Gen Cat Var Stars 2: Table 1 Nomenclature (Nagy unpub)
+General Catalogue of Variable Stars V1.1, Vol. IV (Durlevich+ 1996)
+SKY2000 - Master Star Catalog (Myers+ 1997), courtesy of Sky Publishing Corporation
+Bright Star Catalogue, 5th Revised Ed. (Hoffleit+, 1991)
+-----------------------------------------------------------------------------------------------
+FILE FORMAT
+
+This user object file is formatted in such a way that each object occupies one line in the
+file.  Each line has seven (7) entries, each separated by a single space, as follows:
+
+Object Type - is the number 6 which ultimately controls the symbol used to display the object.
+The number 6 was chosen to display these user objects as a small "x" so that these symbols can
+be easily distinguished from other symbols displayed in ECU, especially when turning off deep
+sky objects.  Using a text editor, you can change this value for each record if you wish to
+alter the way object displays in ECU.  Possible values are 0 to 8.
+
+Right Ascension (RA) - this is the object's right ascension in decimal hours (epoch 2000.0),
+followed by a zero which states that decimal RA is used.
+
+Declination (DEC) - this is the object's declination in decimal degrees (epoch 2000.0),
+followed by a zero which states that decimal degrees is used.
+
+Magnitude - this is the magnitude of the object.  In the case of a variable star, the maximum
+magnitude is given.
+
+Comment - contains up to 15 characters comprising the alignment star number, followed by a
+single asterisk indicating a variable star or a double asterisk indicating a double star (if
+applicable), and the star name (proper name, Bayer reference, or Flamsteed number.
+
+The following illustrates the file format for a line object:
+
+6 18.6156488888889 0 +38.7836611111111 0 0.03 214**VEGA
+-----------------------------------------------------------------------------------------------
+CONTACT
+
+Comments, feedback, and technical questions should be directed to the author, Michael J. Cook
+via e-mail at: mikecook@idirect.com .
+-----------------------------------------------------------------------------------------------
+DISCLAIMER
+
+This archive is distributed on as "as is" basis.  The author makes no claims as to the
+suitability of this archive for any specific use.  In no event will the author be liable for
+any damages, direct, indirect, incidental, special or consequential, resulting from any defect
+in the information contained in this archive, even if it has been advised of the possibility of
+such damages.  Further, the author reserves the right to revise the information contained in
+this archive, and to make changes to it from time to time without any obligation to notify any
+person or organization of such revision or change.  Any redistribution must comprise the entire
+zip archive.
+-----------------------------------------------------------------------------------------------
+TRADEMARKS AND COPYRIGHT NOTICE
+
+"Meade" and "LX200" are registered tradmarks of Meade Instruments Corportation.  Win 3.1/95/98
+are registerd trademarks of Microsoft Corporation. The Earth Centered Universe version 3.0A is
+copyrighted by Nova Astronomics (David J. Lane).
+-----------------------------------------------------------------------------------------------
+END OF FILE.
