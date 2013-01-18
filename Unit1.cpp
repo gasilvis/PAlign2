@@ -16,6 +16,7 @@
 #pragma link "AdPort"
 #pragma link "AdWnPort"
 #pragma link "OoMisc"
+#pragma link "CSPIN"
 #pragma resource "*.dfm"
 TForm1 *Form1;
 
@@ -66,8 +67,7 @@ Status	Input	Name	Output	Unit	Comment
 	0	á1S
 		á1	45	deg	Right Ascension star 1
 		h1	45	deg	Hour Angle star 1
-	45	ä1D
-	0	ä1M
+	45	ä1D                                                                 	0	ä1M
 	0	ä1S
 		ä1	45	deg	Declination star 1
 	0	á2H
@@ -113,19 +113,19 @@ void __fastcall TForm1::NumericOnExit(TObject *Sender)
 //---------------------------------------------------------------------------
 
 struct DMS{
-   double  deg; // degrees
-   double  r;   // radians
-   double  D;
-   double  M;
-   double  S;
+   double  deg;// degrees
+   double  r;  // radians
+   double  D;  // deg
+   double  M;  // arc min
+   double  S;  // arc sec
 };
 
 struct HMS{
    double  deg;
-   double  r;   // radians
-   double  H;
-   double  M;
-   double  S;
+   double  r;  // radians
+   double  H;  // hrs
+   double  M;  // min
+   double  S;  // seconds
 };
 /*  These structures hold 3 versions of angular measurements. If you change one
     version, call one of the functions below to update the alternate forms.
@@ -158,18 +158,17 @@ DMS   errA;       // mount's estimated azimuth error
 
 void _fastcall DtoDMS(DMS *x) {
    int s= 1; long r;
-   double dd= x->deg;
-   if(dd>180) dd-= 360; // DMS runs 180 to -180;
-   long tsecs= floor(0.5+dd*36000); // work with a copy in tenths of an arcsec
+   if(x->deg>180.0) x->deg-= 360.0; // DMS runs 180 to -180;
+   long tsecs= floor(0.5+x->deg*36000.0); // work with a copy in tenths of an arcsec
    if(tsecs<0) { s= -1; tsecs*= s; } // get sign and shift to postive
-   r= tsecs % 36000; x->D= (tsecs-r)/36000; tsecs= r;
-   r= tsecs % 600;   x->M= (tsecs-r)/600;
+   r= tsecs % 36000; x->D= (tsecs-r)/36000.0; tsecs= r;
+   r= tsecs % 600;   x->M= (tsecs-r)/600.0;
 //                     x->S= r/10;
-   x->S= ((s*dd)-(x->D+x->M/60))*3600;
+   x->S= ((s*x->deg)-(x->D+x->M/60.0))*3600.0;
    if(x->D) x->D*= s; // apply overall sign
    else if(x->M) x->M*= s;
    else x->S*=s;
-   x->r= dd * M_PI/180; // make sure radians are uptodate
+   x->r= x->deg * M_PI/180.0; // make sure radians are uptodate
 }
 
 void _fastcall DMStoD(DMS *x) {
@@ -181,25 +180,25 @@ void _fastcall DMStoD(DMS *x) {
       if(xx.M) s= (xx.M<0)?-1:1, xx.M*= s; // or M's
       else     s= (xx.S<0)?-1:1, xx.S*= s; // or S's
    }
-   x->deg= s*((((xx.S/60) + xx.M)/60) + xx.D);
-   while(x->deg > 360) x->deg-= 360;
-   while(x->deg <   0) x->deg+= 360;
-   x->r= x->deg * M_PI/180; // radians
+   x->deg= s*((((xx.S/60.0) + xx.M)/60.0) + xx.D);
+   while(x->deg > 360) x->deg-= 360.0;
+   while(x->deg <   0) x->deg+= 360.0;
+   x->r= x->deg * M_PI/180.0; // radians
    DtoDMS(x); // reset the DMS
 }
 
 void _fastcall DtoHMS(HMS * x) { // set .HMS from .deg
    int s= 1; long r;
-   long tsecs= floor(0.5+x->deg*2400); // work with a copy in tenths of a sec
+   long tsecs= floor(0.5+x->deg*2400.0); // work with a copy in tenths of a sec
    if(tsecs<0) { s= -1; tsecs*= s; } // get sign and shift to postive
-   r= tsecs % 36000; x->H= (tsecs-r)/36000; tsecs= r;
-   r= tsecs % 600;   x->M= (tsecs-r)/600;
+   r= tsecs % 36000; x->H= (tsecs-r)/36000.0; tsecs= r;
+   r= tsecs % 600;   x->M= (tsecs-r)/600.0;
 //                     x->S= r/10;
-   x->S= ((s*x->deg/15)-(x->H+x->M/60))*3600; // all the rest
+   x->S= ((s*x->deg/15)-(x->H+x->M/60))*3600.0; // all the rest
    if(x->H) x->H*= s; // apply overall sign
    else if(x->M) x->M*= s;
    else x->S*=s;
-   x->r= x->deg * M_PI/180; // make sure radians are uptodate
+   x->r= x->deg * M_PI/180.0; // make sure radians are uptodate
 }
 
 void _fastcall HMStoD(HMS * x) {
@@ -211,13 +210,25 @@ void _fastcall HMStoD(HMS * x) {
       if(xx.M) s= (xx.M<0)?-1:1, xx.M*= s; // or M's
       else     s= (xx.S<0)?-1:1, xx.S*= s; // or S's
    }
-   x->deg= s*15*((((xx.S/60)+xx.M)/60)+xx.H);
-   while(x->deg > 360) x->deg-= 360;
-   while(x->deg <   0) x->deg+= 360;
-   x->r= x->deg*M_PI/180; // radians
+   x->deg= s*15*((((xx.S/60.0)+xx.M)/60.0)+xx.H);
+   while(x->deg > 360) x->deg-= 360.0;
+   while(x->deg <   0) x->deg+= 360.0;
+   x->r= x->deg*M_PI/180.0; // radians
    DtoHMS(x); // reset the HMS
 }
 
+void _fastcall Transform(HMS *HA, DMS *DEC, HMS *AZ, DMS *ALT, DMS *LAT)
+{   // Convert the first pair into the other. You can go RA/DEC to AZ/ALT or vice versa
+    ALT->r=  asin( sin(DEC->r) * sin(LAT->r)  +
+                   cos(DEC->r) * cos(LAT->r) * cos(HA->r));
+    AZ->r=   acos( (sin(DEC->r) - sin(ALT->r) * sin(LAT->r)) /
+                    ( cos(ALT->r) * cos(LAT->r) ) );
+    ALT->deg= ALT->r * 180.0/M_PI;
+    AZ->deg=  AZ->r  * 180.0/M_PI;
+    if(sin(HA->deg)> 0) AZ->deg= 360.0 - AZ->deg;
+    DtoDMS(ALT);
+    DtoHMS(AZ);
+}
 
 
 //---------------------------------------------------------------------------
@@ -280,7 +291,14 @@ __fastcall TForm1::TForm1(TComponent* Owner)
    LatM->Text= FloatToStrF(Lat.M,ffFixed, 15,0);
    LatS->Text= FloatToStrF(Lat.S,ffFixed, 15,1);
 
-   ApdPort1->ComNumber= ini->ReadInteger("Setup", "comport", 0);
+   RAMinError->Text= FloatToStrF(ini->ReadFloat("test errors", "RA", 100.0), ffFixed, 15,0);
+   DecMinError->Text= FloatToStrF(ini->ReadFloat("test errors", "Dec", 100.0), ffFixed, 15,0);
+
+   TestMode->Checked= ini->ReadBool("Setup", "testmode", true);
+   if(!TestMode->Checked) {
+      ApdPort1->ComNumber= ini->ReadInteger("Setup", "comport", 0);
+   }
+   SlewErrorGrp->Visible= TestMode->Checked;
 
    delete ini;
    Application->HelpFile= "PAlign2.hlp";
@@ -299,7 +317,10 @@ void __fastcall TForm1::FormClose(TObject *Sender, TCloseAction &Action)
    ini->WriteFloat( "Star2", "Dec", S2D.deg);
    ini->WriteFloat( "Star2", "RA", S2R.deg);
    ini->WriteFloat( "Location", "Lat", Lat.deg);
+   ini->WriteBool("setup", "testmode", TestMode->Checked);
    ini->WriteInteger("Setup", "comport", ApdPort1->ComNumber);
+   ini->WriteFloat("test errors", "RA", RAMinError->Text.ToDouble());
+   ini->WriteFloat("test errors", "Dec", DecMinError->Text.ToDouble());
    delete ini;
 }
 
@@ -391,7 +412,7 @@ void __fastcall TForm1::LSTPanelExit(TObject *Sender)
    LSTS->Text= FloatToStrF(LST.S,ffFixed, 15,1);
 }
 //---------------------------------------------------------------------------
-
+// goto Star 1
 void __fastcall TForm1::Button1Click(TObject *Sender)
 {
    // set star1 position
@@ -444,7 +465,7 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
 
 }
 //---------------------------------------------------------------------------
-
+// goto Star 2
 void __fastcall TForm1::Button2Click(TObject *Sender)
 {
    char s[100], t[100];
@@ -472,7 +493,7 @@ void __fastcall TForm1::Button2Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 double det;
-
+// "Compute Error"
 void __fastcall TForm1::Button3Click(TObject *Sender)
 {
    char s[100], t[100];
@@ -480,11 +501,9 @@ void __fastcall TForm1::Button3Click(TObject *Sender)
    // Get Right Acension ":GR#", ret "HH:MM:SS#"    into S2oR
    if(TestMode->Checked) {
       S2oR= S2R;
-      // introduce an error
-      S2oR.M+= 1;
+      S2oR.H+= RAMinError->Text.ToDouble() /(15.0*60.0); // introduce an error of 100 arc min
    } else {
-      SendRcv(":GR#", s);
-//Label6->Caption= s;
+      SendRcv(":GR#", s); //Label6->Caption= s;
       sscanf(s, "%lf:%lf:%lf#", &S2oR.H, &S2oR.M, &S2oR.S);
    }
    HMStoD(&S2oR);
@@ -497,11 +516,9 @@ void __fastcall TForm1::Button3Click(TObject *Sender)
    // Get Declination   ":GD#", ret "sDD*MM:SS#"   into S2oD
    if(TestMode->Checked) {
       S2oD= S2D;
-      // introduce an error
-      S2oD.D+= 1;
+      S2oD.M+= DecMinError->Text.ToDouble();  // introduce an error 100 arc min
    } else {
-      SendRcv(":GD#", s);
-//Label10->Caption= s;
+      SendRcv(":GD#", s); //Label10->Caption= s;
       sscanf(s, "%lf\337%lf:%lf#", &S2oD.D, &S2oD.M, &S2oD.S);
    }
    DMStoD(&S2oD);
@@ -514,7 +531,7 @@ void __fastcall TForm1::Button3Click(TObject *Sender)
    // get LST; do average?
    // Get Sideral Time  ":GS#", ret "HH:MM:SS#"
    if(TestMode->Checked) {
-      LST= S2R;
+      //LST= S2R;
    } else {
       SendRcv(":GS#", s);
       sscanf(s, "%lf:%lf:%lf#", &LST.H, &LST.M, &LST.S);
@@ -538,6 +555,8 @@ DMS   errD;       // declination error observed at star 2
 DMS   errR;       // Right Ascension error observed at star 2
 DMS   errE;       // mount's estimated elevation error
 DMS   errA;       // mount's estimated azimuth error
+Äe= Äá*cosd(Ö)*(sind(h2)-sind(h1))/det - Ää*cosd(Ö)*(tand(ä1)*cosd(h1)-tand(ä2)*cosd(h2))/det
+Äa= Äá*(cosd(h1)-cosd(h2))/det + Ää*(tand(ä2)*sind(h2)-tand(ä1)*sind(h1))/det
 */
 
    S1H.r= S1R.r - LST.r;
@@ -546,18 +565,28 @@ DMS   errA;       // mount's estimated azimuth error
    det= cos(Lat.r)*(tan(S1D.r) + tan(S2D.r))*(1-cos(S1H.r-S2H.r));
    detD->Text= FloatToStrF(det, ffFixed, 15,8);
 
+   if(det==0) {
+      ShowMessage("Determinant is Zero!");
+      return;
+   }
+
    // elevation error
-   errE.deg= errR.deg*cos(Lat.r)*(sin(S2H.r)-sin(S1H.r))/det
-           - errD.deg*cos(Lat.r)*(tan(S1D.r)*cos(S1H.r)-tan(S2D.r)*cos(S2H.r))/det;
+   errE.deg= (errR.deg*cos(Lat.r)*(sin(S2H.r)-sin(S1H.r))/det)
+           - (errD.deg*cos(Lat.r)*(tan(S1D.r)*cos(S1H.r)-tan(S2D.r)*cos(S2H.r))/det);
    DtoDMS(&errE);
+   Memo1->Lines->Add( errR.deg); //*cos(Lat.r)  );
+   Memo1->Lines->Add(        sin(S2H.r)  -sin(S1H.r)                               );
+   Memo1->Lines->Add(        errD.deg*cos(Lat.r)*(tan(S1D.r)*cos(S1H.r) ));
+   Memo1->Lines->Add(        -tan(S2D.r)*cos(S2H.r)                      );
+
    errED->Text= FloatToStrF(errE.D,ffFixed, 15,0);
    errEM->Text= FloatToStrF(errE.M,ffFixed, 15,0);
    errES->Text= FloatToStrF(errE.S,ffFixed, 15,1);
    errED->Hint= errE.deg; errEM->Hint= errE.deg*60; errES->Hint= errE.deg*3600;
 
    // azimuth error
-   errA.deg= errR.deg*(cos(S1H.r)-cos(S2H.r))/det
-           + errD.deg*(tan(S2D.r)*sin(S2H.r)-tan(S1D.r)*sin(S1H.r))/det;
+   errA.deg= (errR.deg*(cos(S1H.r)-cos(S2H.r))/det)
+           + (errD.deg*(tan(S2D.r)*sin(S2H.r)-tan(S1D.r)*sin(S1H.r))/det);
  Label6->Caption= FloatToStrF(errA.deg,ffFixed, 15, 4);
    DtoDMS(&errA);
  Label10->Caption= FloatToStrF(errA.deg,ffFixed, 15, 4);
@@ -575,6 +604,58 @@ DMS   errA;       // mount's estimated azimuth error
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TForm1::Button6Click(TObject *Sender)
+{
+   ShiftError(Sender, false);
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm1::Button7Click(TObject *Sender)
+{
+   ShiftError(Sender, false);
+}
+//---------------------------------------------------------------------------
+
+
+
+
+// Move scope so that shifting Azimuth until recentered, corrects the error
+void __fastcall TForm1::ShiftError(TObject *Sender, boolean elevation)
+{
+   // convert  alt/az, add error, convert back, load and go
+   DMS ALT, tDEC;  HMS AZ, tRA; char t[100];
+   Transform(&S2oR, &S2oD, &AZ, &ALT, &Lat);
+   if(elevation) ALT.deg+= errE.deg;
+   else          AZ.deg+= errA.deg;
+   DtoDMS(&ALT); DtoHMS(&AZ);
+   Transform(&AZ, &ALT, &tRA, &tDEC, &Lat);
+   DtoHMS(&tRA); DtoDMS(&tDEC);
+
+
+   // load coord of star and goto
+   // ":Sr HH:MM:SS#" ret "1"
+   sprintf(t, ":Sr %02.0lf:%02.0lf:%02.0lf#", tRA.H, tRA.M, tRA.S);
+   if(TestMode->Checked) Label34->Caption= t;
+   else   SendRcv(t, NULL);
+   // ":Sd sDD*MM:SS#" ret "1"
+   sprintf(t, ":Sd %+03.0lf\337%02.0lf:%02.0lf#", tDEC.D, tDEC.M, tDEC.S);
+   if(TestMode->Checked) Label35->Caption= t;
+   else   SendRcv(t, NULL);
+
+   // goto the star 2
+   // ":MS#", ret "0" (if "1.." or 2..", can't reach it)
+   if(!TestMode->Checked)
+       SendRcv(":MS#", NULL);
+
+   //ActiveControl= Button3;
+
+}
+//---------------------------------------------------------------------------
+
+
+
+
 void __fastcall TForm1::Button4Click(TObject *Sender)
 {
    // swap star 1 and star 2
@@ -590,7 +671,6 @@ void __fastcall TForm1::Button4Click(TObject *Sender)
    S1RH->Text= FloatToStrF(S1R.H,ffFixed, 15,0);
    S1RM->Text= FloatToStrF(S1R.M,ffFixed, 15,0);
    S1RS->Text= FloatToStrF(S1R.S,ffFixed, 15,1);
-
    Star1Num->Text= Star1no;
    Star1NumExit(Owner);
 
@@ -600,11 +680,16 @@ void __fastcall TForm1::Button4Click(TObject *Sender)
    S2RH->Text= FloatToStrF(S2R.H,ffFixed, 15,0);
    S2RM->Text= FloatToStrF(S2R.M,ffFixed, 15,0);
    S2RS->Text= FloatToStrF(S2R.S,ffFixed, 15,1);
-
    Star2Num->Text= Star2no;
    Star2NumExit(Owner);
 
+   DecMinError->Text= - DecMinError->Text.ToDouble();
+   RAMinError->Text= - RAMinError->Text.ToDouble();
+
    ActiveControl= (TestMode->Checked)?Button3:Button2;
+
+   // reverse the error
+
 
 
 //    char s[100];
@@ -811,7 +896,7 @@ void __fastcall TForm1::Star1NumExit(TObject *Sender)
       Star1no= 0;
    }
    if(!Star1no) {
-      Star1Num->Text= ""; Star1Name->Caption= "";
+      Star1Num->Text= "0"; Star1Name->Caption= "";
       S1RH->ReadOnly= false; S1RM->ReadOnly= false; S1RS->ReadOnly= false;
       S1DD->ReadOnly= false; S1DM->ReadOnly= false; S1DS->ReadOnly= false;
    }
@@ -858,7 +943,7 @@ void __fastcall TForm1::Star2NumExit(TObject *Sender)
       Star2no= 0;
    }
    if(!Star2no) {
-      Star2Num->Text= ""; Star2Name->Caption= "";
+      Star2Num->Text= "0"; Star2Name->Caption= "";
       S2RH->ReadOnly= false; S2RM->ReadOnly= false; S2RS->ReadOnly= false;
       S2DD->ReadOnly= false; S2DM->ReadOnly= false; S2DS->ReadOnly= false;
    }
@@ -884,6 +969,7 @@ void __fastcall TForm1::Help2Click(TObject *Sender)
    Application->HelpJump("Introduction");
 }
 //---------------------------------------------------------------------------
+
 
 
 

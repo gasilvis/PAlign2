@@ -16,6 +16,7 @@
 #include "AdPort.hpp"
 #include "AdWnPort.hpp"
 #include "OoMisc.hpp"
+#include "CSPIN.h"
 //---------------------------------------------------------------------------
 class TForm1 : public TForm
 {
@@ -112,6 +113,17 @@ __published:	// IDE-managed Components
    TMenuItem *About1;
    TLabel *Label7;
    TMemo *Memo1;
+   TButton *Button6;
+   TButton *Button7;
+   TLabel *Label32;
+   TLabel *Label33;
+   TLabel *Label34;
+   TLabel *Label35;
+   TGroupBox *SlewErrorGrp;
+   TLabel *Label36;
+   TLabel *Label37;
+   TCSpinEdit *RAMinError;
+   TCSpinEdit *DecMinError;
    void __fastcall Star1GrpExit(TObject *Sender);
    void __fastcall NumericOnKeyPress(TObject *Sender, char &Key);
    void __fastcall NumericOnExit(TObject *Sender);
@@ -134,10 +146,13 @@ __published:	// IDE-managed Components
    void __fastcall Exit1Click(TObject *Sender);
    void __fastcall About1Click(TObject *Sender);
    void __fastcall Help2Click(TObject *Sender);
+   void __fastcall Button6Click(TObject *Sender);
+   void __fastcall Button7Click(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
        __fastcall TForm1(TComponent* Owner);
    int __fastcall SendRcv(char *cmd, char *rsp);
+   void __fastcall ShiftError(TObject *Sender, boolean elevation);
 
 };
 //---------------------------------------------------------------------------

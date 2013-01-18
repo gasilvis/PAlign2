@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 363
-  Top = 93
+  Left = 418
+  Top = 162
   Width = 727
   Height = 666
   Caption = 'Polar Aligner, 2 star'
@@ -100,6 +100,32 @@ object Form1: TForm1
     Width = 70
     Height = 16
     Caption = 'Version 003'
+  end
+  object Label32: TLabel
+    Left = 32
+    Top = 352
+    Width = 91
+    Height = 16
+    Caption = 'move mount Az'
+  end
+  object Label33: TLabel
+    Left = 32
+    Top = 424
+    Width = 102
+    Height = 16
+    Caption = 'Move mount elev'
+  end
+  object Label34: TLabel
+    Left = 152
+    Top = 320
+    Width = 3
+    Height = 16
+  end
+  object Label35: TLabel
+    Left = 152
+    Top = 344
+    Width = 3
+    Height = 16
   end
   object Star1Grp: TGroupBox
     Left = 25
@@ -1086,7 +1112,7 @@ object Form1: TForm1
   end
   object Button4: TButton
     Left = 33
-    Top = 320
+    Top = 456
     Width = 96
     Height = 25
     Caption = 'Swap 1 and 2'
@@ -1104,8 +1130,8 @@ object Form1: TForm1
     OnClick = Button5Click
   end
   object StopBtn: TButton
-    Left = 59
-    Top = 374
+    Left = 35
+    Top = 518
     Width = 92
     Height = 60
     Caption = 'STOP'
@@ -1136,13 +1162,88 @@ object Form1: TForm1
     ScrollBars = ssVertical
     TabOrder = 25
   end
+  object Button6: TButton
+    Left = 32
+    Top = 312
+    Width = 97
+    Height = 25
+    Caption = 'Move Az error'
+    TabOrder = 26
+    OnClick = Button6Click
+  end
+  object Button7: TButton
+    Left = 32
+    Top = 384
+    Width = 97
+    Height = 25
+    Caption = 'Move Elev error'
+    TabOrder = 27
+    OnClick = Button7Click
+  end
+  object SlewErrorGrp: TGroupBox
+    Left = 152
+    Top = 320
+    Width = 153
+    Height = 81
+    Caption = 'slew error (deg min)'
+    TabOrder = 28
+    object Label36: TLabel
+      Left = 16
+      Top = 24
+      Width = 19
+      Height = 16
+      Caption = 'RA'
+    end
+    object Label37: TLabel
+      Left = 16
+      Top = 56
+      Width = 25
+      Height = 16
+      Caption = 'Dec'
+    end
+    object RAMinError: TCSpinEdit
+      Left = 64
+      Top = 16
+      Width = 73
+      Height = 26
+      TabStop = True
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      TabOrder = 0
+      OnChange = Button3Click
+      OnExit = NumericOnExit
+      OnKeyPress = NumericOnKeyPress
+    end
+    object DecMinError: TCSpinEdit
+      Left = 64
+      Top = 48
+      Width = 73
+      Height = 26
+      TabStop = True
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      TabOrder = 1
+      OnChange = Button3Click
+      OnExit = NumericOnExit
+      OnKeyPress = NumericOnKeyPress
+    end
+  end
   object ApdPort1: TApdWinsockPort
     WsPort = 'telnet'
     Baud = 9600
     ComNumber = 3
     TraceName = 'APRO.TRC'
     LogName = 'APRO1.LOG'
-    Open = True
     Left = 640
     Top = 328
   end

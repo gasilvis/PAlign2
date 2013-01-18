@@ -11,7 +11,9 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
    try
    {
       Application->Initialize();
-      Application->CreateForm(__classid(TForm1), &Form1);
+      Application->HelpFile = "C:\\projects\\astro\\palign2\\palign2.hlp";
+       Application->Title = "Polar Align 2 Star";
+       Application->CreateForm(__classid(TForm1), &Form1);
       Application->CreateForm(__classid(TfAbout), &fAbout);
       Application->Run();
    }

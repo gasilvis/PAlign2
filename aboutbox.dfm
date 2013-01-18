@@ -1,6 +1,6 @@
 object fAbout: TfAbout
-  Left = 262
-  Top = 216
+  Left = 263
+  Top = 218
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   ClientHeight = 301
@@ -26,8 +26,8 @@ object fAbout: TfAbout
     object Image1: TImage
       Left = 24
       Top = 24
-      Width = 32
-      Height = 32
+      Width = 40
+      Height = 40
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001002020100000000000E80200001600000028000000
@@ -60,8 +60,8 @@ object fAbout: TfAbout
     object Label1: TLabel
       Left = 80
       Top = 24
-      Width = 106
-      Height = 36
+      Width = 92
+      Height = 32
       Caption = 'PAlign2'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -73,7 +73,7 @@ object fAbout: TfAbout
     object Label2: TLabel
       Left = 80
       Top = 72
-      Width = 293
+      Width = 280
       Height = 20
       Caption = 'The 2 star mounting alignment utility for '
       Font.Charset = DEFAULT_CHARSET
@@ -86,7 +86,7 @@ object fAbout: TfAbout
     object Label3: TLabel
       Left = 120
       Top = 96
-      Width = 193
+      Width = 186
       Height = 20
       Caption = 'Meade LX-200 telescopes'
       Font.Charset = DEFAULT_CHARSET
